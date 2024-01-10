@@ -13,7 +13,7 @@ class SentManager:
         with open(self.tsv_path, newline='') as tsv_file:
             reader = csv.reader(tsv_file, delimiter='\t')
             for row in reader:
-                self.sentences.append(row[0])
+                self.sentences.append((row[1],row[3]))
 
     def get_random_sentence(self):
         return random.choice(self.sentences)
