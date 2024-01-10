@@ -1,7 +1,6 @@
 # HonyakuBot
 - A game designed to train human beings like an AI. 
 - Uses datasets with semantic analysis to judge accuracy.
-- 「Kanji de Go」but for grammar/understanding?
 
 ## Sytem Requirements
 - Testing in codespaces, should work on any OS that supports python.
