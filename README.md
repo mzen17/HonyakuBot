@@ -4,10 +4,13 @@
 
 ## Sytem Requirements
 - Testing in codespaces, should work on any OS that supports python.
+- Currently only has script for Linux
 - Does not require any extensive hardware.
+- Needs about ~2GB of space.
 
 ## Use
-- Terminal app [main.py], run it. Ex: python3 app/main.py
+- Terminal app, has script manager.sh 
+- Run script with 'install', then 'run'.
 - Commands are in app.
 - Will do some installing on first use.
 

@@ -1,8 +1,15 @@
 # Terminal System
 
+print("Loading...")
+
 from comparison import Comparator
 from sentmanager import SentManager
 import os
+
+dirname = os.path.dirname(__file__)
+sentmanager = SentManager(f"{dirname}/sampledata/jp-eng.tsv")
+comparator = Comparator()
+
 
 print("Welcome to HonyakuBot.")
 print("Let the fun begin! :D")
@@ -10,16 +17,13 @@ reverse = False
 
 while True:
     print("Waiting for command... [Type 'h' for help]")
-    dirname = os.path.dirname(__file__)
-    sentmanager = SentManager(f"{dirname}/sampledata/jp-eng.tsv")
 
     command = input("> ")
     if ( command == "q"):
         break;
     elif ( command == "r"):
         reverse = not reverse
-        print("Reverse mode: " + str(reverse))
-    
+        print("Reverse mode: " + str(reverse))   
     elif ( command == "h"):
         print("Commands:")
         print("q - quit")
@@ -36,8 +40,6 @@ while True:
         print("Translate: [" + test[0] + "]")
 
         translation = input("> ")
-
-        comparator = Comparator()
         score = comparator.compare_sentences(test[1], translation)
 
         print("Score: " + str(score))
