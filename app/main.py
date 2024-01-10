@@ -6,6 +6,7 @@ import os
 
 print("Welcome to HonyakuBot.")
 print("Let the fun begin! :D")
+reverse = False
 
 while True:
     print("Waiting for command... [Type 'h' for help]")
@@ -15,14 +16,22 @@ while True:
     command = input("> ")
     if ( command == "q"):
         break;
+    elif ( command == "r"):
+        reverse = not reverse
+        print("Reverse mode: " + str(reverse))
+    
     elif ( command == "h"):
         print("Commands:")
         print("q - quit")
         print("h - help")
+        print("r - reverse")
         print("n - new sentence")
     elif ( command == "n"):
         
         test = sentmanager.get_random_sentence()
+
+        if (reverse):
+            test = ( test[1], test[0])
 
         print("Translate: [" + test[0] + "]")
 
