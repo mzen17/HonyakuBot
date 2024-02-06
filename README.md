@@ -1,5 +1,5 @@
 # HonyakuBot
-- A game designed to train human beings like an AI. 
+- A game designed to train human beings like an AI.
 - Uses datasets with semantic analysis to judge accuracy.
 
 ![Audio Demo](/gallery/audio.jpg)
@@ -35,7 +35,8 @@
 ## Notes
 - Provided data only has Japanese -> English.
 - Does not care about difficulty or manage it for you.
-- Does not track which sentences are done
+- Does not track which sentences are done.
+- Sound quality may be subpar for performance.
 
 ## Future Updates
 - Might add more languages later

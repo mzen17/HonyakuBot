@@ -22,19 +22,26 @@ r = Reader("static")
 
 
 app = FastAPI()
+# Base URI in case running in an environment that attaches a base uri.
 if "BASE_URI" in os.environ:
     BASE_URI = os.environ["BASE_URI"]
 else:
     BASE_URI = ""
+
+# Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
+# Session KV.
+# In memory store to prevent project from needing excessive services (such as a redis)
 session_KV = {}
 
+
+# Return HTML
 templates = Jinja2Templates(directory="templates")
 @app.get("/", response_class=HTMLResponse)
 async def main(request: Request):
     return templates.TemplateResponse("index.html",{"request": request, "URI":BASE_URI})
+
 
 # Session Creation:
 # Generates random string of tokens for session management
@@ -52,6 +59,8 @@ async def create_session():
 class KEY_TO_VAL(BaseModel):
     KEY: str
 
+# Validating Session API
+# Ensures that key is valid and not expired.
 @app.post("/validate")
 async def validate_session(recieve: KEY_TO_VAL):
     status = False
@@ -60,6 +69,7 @@ async def validate_session(recieve: KEY_TO_VAL):
     return {"KEY":status}
 
 
+# Terminal Input
 class SUBMISSION(BaseModel):
     KEY: str
     command: str
@@ -69,40 +79,51 @@ async def update_session(sub: SUBMISSION):
     output="Bad Command [If you type correct command, try purging session]"
     ef = ""
 
+    # Make sure key is valid
     if sub.KEY in session_KV and time.time() < session_KV[sub.KEY]["expire"]:
+        
         phase = session_KV[sub.KEY]['phase']
+
+        # Phase 1 means it has sent sentence
         if(phase == 1):
+            # Retrieve test and compare
             test = session_KV[sub.KEY]['problem']
             score = comparator.compare_sentences(test[1], sub.command)
 
+            # Return output
             p_statement = f"Problem: [{test[0]}]\n\nYour Answer: {sub.command}\nCorrect answer: [{test[1]}]"
             output = f"{p_statement}\nScore: {str(score)}"
             session_KV[sub.KEY]['phase'] = 0
 
+        # Generate new
         if(phase == 0 and sub.command == 'n'):
+            # Set phase to mean it has sent sentence
             session_KV[sub.KEY]['phase'] = 1
             test = sentmanager.get_random_sentence()
 
+            # Reverse mode reverses sentence (ex: en->jp, now jp->en)
             if ( session_KV[sub.KEY]['reverse']):
                 test = (test[1], test[0])
 
+            # Build output
             session_KV[sub.KEY]['problem'] = test
             output = "Translate:\n\n["+ test[0] + "]"
 
+            # If listen mode, attach the listen media
             if(session_KV[sub.KEY]["listen"]):
                 ef = r.produce_sound(test[0])
                 output = "Listen to the attached audio."
 
+        # Toggle reverse or listening
         if(phase == 0 and sub.command == 'r'):
             session_KV[sub.KEY]['reverse'] = not session_KV[sub.KEY]['reverse']
             output = "Reverse mode: " + str(session_KV[sub.KEY]['reverse'])
-
 
         if(phase == 0 and sub.command == 'l'):
             session_KV[sub.KEY]['listen'] = not session_KV[sub.KEY]['listen']
             output = "Listen mode: " + str(session_KV[sub.KEY]['listen'])
 
-
+        # Return help
         if(phase == 0 and sub.command == 'h'):
             output = """Commands:\nh - help
             r - reverse
