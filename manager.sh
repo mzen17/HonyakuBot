@@ -1,17 +1,20 @@
 #!/bin/bash
 # Runs/Installs app
 
+echo "This script should be running in repository directory."
+
 if [ "$1" == "install" ]; then
     if [ ! -d ".venv" ]; then
         echo "Creating virtual environment"
+        python -m venv .venv
     else
         echo "Virtual environment already exists"
         echo "Use 'rm .venv' to remove it"
         exit 1
     fi
     source .venv/bin/activate
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-    pip install sentence-transformers
+    pip install -r torchreqs.txt
+    pip install -r webreqs.txt
 
 elif [ "$1" == "run" ]; then
     if [ ! -d ".venv" ]; then
@@ -19,8 +22,12 @@ elif [ "$1" == "run" ]; then
         echo "Use 'install' to create it"
         exit 1
     fi
+    echo "If the URL does not root to /, enter base URI into second paramater."
+    echo "Format for that is /base_uri"
+
     source .venv/bin/activate
-    python3 app/main.py 
+    export BASE_URI=$2
+    uvicorn app.web:app --host 0.0.0.0
 
 else
     echo "Invalid argument"

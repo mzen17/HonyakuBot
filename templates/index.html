@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>翻訳・TRAINER</title>
+    </head>
+    <body>
+        <h1>Honyaku Trainer</h1>
+        <h2>Terminal [input h for help]</h1>
+        <p id="screen" style="
+            background:black; 
+            color:white; 
+            padding:32px; 
+            min-height:90px; 
+            white-space: 
+            pre-line"
+        > Welcome to HonyakuBot.
+        Let the fun begin! :D
+        </p>
+        <textarea style="width:80vw; display:block; margin-bottom:10px" rows="5" type="text" id="cmdline"></textarea>
+        <button style="margin-bottom:20px" onclick="update()">Submit</button>
+        <p id="sessionID" style="margin-bottom:10px">SessionID: null</p>
+
+        <button onclick="fkCookie()">Purge Session</button>
+
+<script>
+    var session = null
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+
+    function fkCookie() {
+        document.cookie = "SK=";
+    }
+
+
+    async function update() {
+        var input = document.getElementById("cmdline")
+        send = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: "{\"KEY\":\"" + session + "\", \"command\":\""+ input.value +"\"}"
+            }
+
+        console.log(send)
+
+        response = await fetch("{{ URI }}" + "/submission", send)
+        resp_json = await response.json()
+
+        var terminal = document.getElementById("screen");
+        terminal.textContent = resp_json["output"]
+        input.value = ""
+
+    }
+
+
+    window.onload = async function() {
+        ck_v = getCookie("SK")
+        if(ck_v== null || ck_v == "") {
+
+            response = await fetch("{{ URI }}" + "/new")
+            resp_json = await response.json()
+            session = resp_json["KEY"]
+
+        } else {
+
+            send = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: "{\"KEY\":\"" + ck_v + "\"}"
+            }
+            console.log(send)
+
+            response = await fetch("{{ URI }}" + "/validate", send)
+            resp_json = await response.json()
+            session = ck_v
+
+            if (resp_json["KEY"] != true) {
+                resp = await fetch("{{ URI }}" + "/new")
+                res_json = await resp.json()
+                session = res_json["KEY"]
+            }
+        }
+        document.cookie = "SK="+session;
+        var sk = document.getElementById("sessionID");
+        sk.textContent = "SessionID: " + session;
+
+    };
+</script>
+</body>
+
+</html>
