@@ -2,3 +2,5 @@ fastapi
 uvicorn
 websockets
 sentence-transformers
+datasets
+TTS[ja]

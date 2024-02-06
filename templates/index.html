@@ -16,10 +16,19 @@
         > Welcome to HonyakuBot.
         Let the fun begin! :D
         </p>
-        <textarea style="width:80vw; display:block; margin-bottom:10px" rows="5" type="text" id="cmdline"></textarea>
-        <button style="margin-bottom:20px" onclick="update()">Submit</button>
-        <p id="sessionID" style="margin-bottom:10px">SessionID: null</p>
 
+
+        <audio controls style="margin-bottom:10px" id="audio_player" >
+            <source src="/thiswillnotwork.mp3" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+
+        <textarea style="width:80vw; display:block; margin-bottom:10px" rows="5" type="text" id="cmdline"></textarea>
+        <button style="margin-bottom:20px; display:block" onclick="update()">Submit</button>
+
+          
+
+        <p id="sessionID" style="margin-bottom:10px">SessionID: null</p>
         <button onclick="fkCookie()">Purge Session</button>
 
 <script>
@@ -38,6 +47,8 @@
 
 
     async function update() {
+        var terminal = document.getElementById("screen");
+        terminal.textContent = "Submitting..."
         var input = document.getElementById("cmdline")
         send = {
                 method: 'POST',
@@ -47,13 +58,20 @@
                 body: "{\"KEY\":\"" + session + "\", \"command\":\""+ input.value +"\"}"
             }
 
-        console.log(send)
 
         response = await fetch("{{ URI }}" + "/submission", send)
         resp_json = await response.json()
 
-        var terminal = document.getElementById("screen");
         terminal.textContent = resp_json["output"]
+        console.log(resp_json)
+        
+
+        if(resp_json["file"] !== "") {
+            var audio = document.getElementById("audio_player");
+            audio.src = "{{ URI }}"+"/"+resp_json["file"];
+            console.log("{{ URI }}"+"/"+resp_json["file"]);
+            audio.load();
+        }
         input.value = ""
 
     }
@@ -76,8 +94,6 @@
                 },
                 body: "{\"KEY\":\"" + ck_v + "\"}"
             }
-            console.log(send)
-
             response = await fetch("{{ URI }}" + "/validate", send)
             resp_json = await response.json()
             session = ck_v

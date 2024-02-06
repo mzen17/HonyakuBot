@@ -4,7 +4,7 @@
 
 ## Sytem Requirements
 - Testing in a self-hosted codeserver instance.
-- 6 vCPU (Intel Xeon E5 2670), 32GB RAM, Debian 11
+- 8 vCPU (Intel Xeon E5 2670), 32GB RAM, Debian 12
 - Does not require any extensive hardware.
 - Needs about ~2GB of disk space.
 
@@ -16,9 +16,22 @@
 - Will do some installing on first use and has slow start up.
 
 ## Notes
-- Provided data only has Japanese -> English. [ Will add some more samples later ]
-- Does not care about difficulty or manage it for you. [ Future use AI to determine difficulty? ]
-- Does not track which sentences are done [ Later use database with SQLite? ]
+- Provided data only has Japanese -> English.
+- Does not care about difficulty or manage it for you.
+- Does not track which sentences are done
+
+## Future Updates
+- Might add more languages later
+- Adding of a custom ML model to determine difficulty or catogories of sentences (JP only).
+- Multilingual Embedder
+- Use Reddis instead of a Python dictionary for storing KV.
+- Listening + Speaking
 
 ## Use own TSV
 - Replace data jp-eng.tsv with [Language to translate] in the 2nd column, and [Language out] in fourth. 
+
+## Will there be a public hosted version?
+Perhaps.
+
+After some QA and performance testing, I'll see. I have hardware/servers, and it's relatively cheap to run, 
+but I don't want to maintain it against things like DDOS and security problems which can happen by public exposure.

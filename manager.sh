@@ -15,6 +15,7 @@ if [ "$1" == "install" ]; then
     source .venv/bin/activate
     pip install -r torchreqs.txt
     pip install -r webreqs.txt
+    mkdir static
 
 elif [ "$1" == "run" ]; then
     if [ ! -d ".venv" ]; then
@@ -28,7 +29,6 @@ elif [ "$1" == "run" ]; then
     source .venv/bin/activate
     export BASE_URI=$2
     uvicorn app.web:app --host 0.0.0.0
-
 else
     echo "Invalid argument"
     echo "Use 'install' or 'run'"
