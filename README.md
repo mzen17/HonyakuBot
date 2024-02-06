@@ -2,11 +2,28 @@
 - A game designed to train human beings like an AI. 
 - Uses datasets with semantic analysis to judge accuracy.
 
+![Audio Demo](/gallery/audio.jpg)
+![Read Demo](/gallery/read.jpg)
+![Answer](/gallery/answer.jpg)
+
+
 ## Sytem Requirements
 - Testing in a self-hosted codeserver instance.
-- 8 vCPU (Intel Xeon E5 2670), 32GB RAM, Debian 12
+
+### Minimum Specs
+- Runs on Google Colab
+- 1 vCPU (of weak Xeon)
+- 12 GB RAM
+
+### Reference Specs (What it was built and tested on)
+- 8 vCPU (Intel Xeon E5 2670).
+- 32GB RAM.
+- Debian 12 with python3, python3-venv, and pip installed.
+
+### Overall Notes
 - Does not require any extensive hardware.
 - Needs about ~2GB of disk space.
+- Preferable Linux environment
 
 ## Use
 - Web application.
@@ -25,7 +42,7 @@
 - Adding of a custom ML model to determine difficulty or catogories of sentences (JP only).
 - Multilingual Embedder
 - Use Reddis instead of a Python dictionary for storing KV.
-- Listening + Speaking
+- Speaking practice
 
 ## Use own TSV
 - Replace data jp-eng.tsv with [Language to translate] in the 2nd column, and [Language out] in fourth. 
