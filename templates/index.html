@@ -2,21 +2,23 @@
 <html>
     <head>
         <title>翻訳・TRAINER</title>
+        <script src="https://cdn.jsdelivr.net/npm/xterm@4.18.0/lib/xterm.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.5.0/lib/xterm-addon-fit.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/xterm-addon-webgl@0.11.4/lib/xterm-addon-webgl.min.js"></script> -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.11.0/css/xterm.css"></link>
     </head>
     <body>
         <h1>Honyaku Trainer</h1>
         <h2>Terminal [input h for help]</h1>
-        <p id="screen" style="
+        <!-- <p id="screen" style="
             background:black; 
             color:white; 
             padding:32px; 
             min-height:90px; 
-            white-space: 
-            pre-line"
-        > Welcome to HonyakuBot.
-        Let the fun begin! :D
-        </p>
-
+            white-space:pre-line;"
+        >
+        </p> -->
+        <div id="terminal" style="overflow: hidden;"></div>
 
         <audio controls style="margin-bottom:10px" id="audio_player" >
             <source src="/thiswillnotwork.mp3" type="audio/wav">
@@ -32,6 +34,25 @@
         <button onclick="fkCookie()">Purge Session</button>
 
 <script>
+    var term = new Terminal({
+        convertEol: true
+    });
+    var term_element = document.getElementById("terminal");
+    term.open(term_element);
+    term.write("Welcome to HonyakuBot.\nLet the fun begin! :D");
+    const fit_addon = new (FitAddon.FitAddon)();
+    term.loadAddon(fit_addon);
+    fit_addon.fit();
+    const resize_handler = () => {
+        fit_addon.fit();
+    };
+    const resize_observer = new ResizeObserver(resize_handler);
+    resize_observer.observe(term_element);
+    resize_handler();
+    term_element.addEventListener('copy', (event) => event.preventDefault());
+    term_element.addEventListener('paste', (event) => event.preventDefault());
+    term_element.addEventListener('contextmenu', (event) => event.preventDefault());
+
     var session = null
 
     function getCookie(name) {
@@ -47,8 +68,9 @@
 
 
     async function update() {
-        var terminal = document.getElementById("screen");
-        terminal.textContent = "Submitting..."
+        // var terminal = document.getElementById("screen");
+        // terminal.textContent = "Submitting..."
+        term.write("\n\nSubmitting...");
         var input = document.getElementById("cmdline")
         send = {
                 method: 'POST',
@@ -62,7 +84,8 @@
         response = await fetch("{{ URI }}" + "/submission", send)
         resp_json = await response.json()
 
-        terminal.textContent = resp_json["output"]
+        // terminal.textContent = resp_json["output"]
+        term.write(`\x1b[2J\x1b[H\n\n${resp_json["output"]}`);
         console.log(resp_json)
         
 
