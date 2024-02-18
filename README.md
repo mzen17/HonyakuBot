@@ -2,10 +2,10 @@
 - A game designed to train human beings like an AI.
 - Uses datasets with semantic analysis to judge accuracy.
 
-![Audio Demo](/gallery/audio.jpg)
-![Read Demo](/gallery/read.jpg)
-![Answer](/gallery/answer.jpg)
+# Public Demo
+May be down, have performance issues, etc. Do not expect any sort of uptime or performance. It is running on demo machine without any form of performance testing or QA testing. Downtime will depend on how much free time I have.
 
+[Demo Site](https://hybot.mzen.dev)
 
 ## Sytem Requirements
 - Testing in a self-hosted codeserver instance.
@@ -46,9 +46,3 @@
 
 ## Use own TSV
 - Replace data jp-eng.tsv with [Language to translate] in the 2nd column, and [Language out] in fourth. 
-
-## Will there be a public hosted version?
-Perhaps.
-
-After some QA and performance testing, I'll see. I have hardware/servers, and it's relatively cheap to run, 
-but I don't want to maintain it against things like DDOS and security problems which can happen by public exposure.
