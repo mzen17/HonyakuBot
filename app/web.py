@@ -125,10 +125,6 @@ async def update_session(sub: SUBMISSION):
 
         # Return help
         if(phase == 0 and sub.command == 'h'):
-            output = """Commands:\nh - help
-            r - reverse
-            l - enable or disable listen
-            n - new sentence
-            """
+            output = "Commands:\nh - help\nr - reverse\nl - enable or disable listen\nn - new sentence"
 
     return {"output":output, "file":ef}

@@ -2,7 +2,7 @@
 **/__pycache__/
 .venv
 venv
-static
 
 # Custom
 temp.txt
+*.wav

@@ -6,133 +6,134 @@
         <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.5.0/lib/xterm-addon-fit.min.js"></script>
         <!-- <script src="https://cdn.jsdelivr.net/npm/xterm-addon-webgl@0.11.4/lib/xterm-addon-webgl.min.js"></script> -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.11.0/css/xterm.css"></link>
+        <link rel="stylesheet" href="{{ URI }}/static/styles.css"></link>
     </head>
+
     <body>
         <h1>Honyaku Trainer</h1>
         <h2>Terminal [input h for help]</h1>
-        <!-- <p id="screen" style="
-            background:black; 
-            color:white; 
-            padding:32px; 
-            min-height:90px; 
-            white-space:pre-line;"
-        >
-        </p> -->
         <div id="terminal" style="overflow: hidden;"></div>
 
         <audio controls style="margin-bottom:10px" id="audio_player" >
-            <source src="/thiswillnotwork.mp3" type="audio/wav">
+            <source src="null" type="audio/wav">
             Your browser does not support the audio element.
         </audio>
 
         <textarea style="width:80vw; display:block; margin-bottom:10px" rows="5" type="text" id="cmdline"></textarea>
         <button style="margin-bottom:20px; display:block" onclick="update()">Submit</button>
 
-          
-
         <p id="sessionID" style="margin-bottom:10px">SessionID: null</p>
         <button onclick="fkCookie()">Purge Session</button>
 
-<script>
-    var term = new Terminal({
-        convertEol: true
-    });
-    var term_element = document.getElementById("terminal");
-    term.open(term_element);
-    term.write("Welcome to HonyakuBot.\nLet the fun begin! :D");
-    const fit_addon = new (FitAddon.FitAddon)();
-    term.loadAddon(fit_addon);
-    fit_addon.fit();
-    const resize_handler = () => {
-        fit_addon.fit();
-    };
-    const resize_observer = new ResizeObserver(resize_handler);
-    resize_observer.observe(term_element);
-    resize_handler();
-    term_element.addEventListener('copy', (event) => event.preventDefault());
-    term_element.addEventListener('paste', (event) => event.preventDefault());
-    term_element.addEventListener('contextmenu', (event) => event.preventDefault());
+        <script>
+            var term = new Terminal({
+                convertEol: true,
+                rows: 10
+            });
 
-    var session = null
+            var term_element = document.getElementById("terminal");
+            term.open(term_element);
+            term.write("Welcome to HonyakuBot.\nLet the fun begin! :D\n\n");
 
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
+            // Having some bugs with styling, so this is commented for now
 
+            // const fit_addon = new (FitAddon.FitAddon)();
+            // term.loadAddon(fit_addon);
+            // fit_addon.fit();
 
-    function fkCookie() {
-        document.cookie = "SK=";
-    }
+            // const resize_handler = () => {
+            //    fit_addon.fit();
+            // };
+             
+            // const resize_observer = new ResizeObserver(resize_handler);
+            // resize_observer.observe(term_element);
+            // resize_handler();
+            
 
+            term_element.addEventListener('copy', (event) => event.preventDefault());
+            term_element.addEventListener('paste', (event) => event.preventDefault());
+            term_element.addEventListener('contextmenu', (event) => event.preventDefault());
 
-    async function update() {
-        // var terminal = document.getElementById("screen");
-        // terminal.textContent = "Submitting..."
-        term.write("\n\nSubmitting...");
-        var input = document.getElementById("cmdline")
-        send = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: "{\"KEY\":\"" + session + "\", \"command\":\""+ input.value +"\"}"
+            // Temporary solution while Xtermjs is just renderer
+            term.setOption('cursorBlink', false);
+            term.setOption('cursorInactiveStyle', "none");
+            term.setOption('cursorStyle', "none");
+
+            var session = null
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
             }
 
 
-        response = await fetch("{{ URI }}" + "/submission", send)
-        resp_json = await response.json()
-
-        // terminal.textContent = resp_json["output"]
-        term.write(`\x1b[2J\x1b[H\n\n${resp_json["output"]}`);
-        console.log(resp_json)
-        
-
-        if(resp_json["file"] !== "") {
-            var audio = document.getElementById("audio_player");
-            audio.src = "{{ URI }}"+"/"+resp_json["file"];
-            console.log("{{ URI }}"+"/"+resp_json["file"]);
-            audio.load();
-        }
-        input.value = ""
-
-    }
-
-
-    window.onload = async function() {
-        ck_v = getCookie("SK")
-        if(ck_v== null || ck_v == "") {
-
-            response = await fetch("{{ URI }}" + "/new")
-            resp_json = await response.json()
-            session = resp_json["KEY"]
-
-        } else {
-
-            send = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: "{\"KEY\":\"" + ck_v + "\"}"
+            function fkCookie() {
+                document.cookie = "SK=";
             }
-            response = await fetch("{{ URI }}" + "/validate", send)
-            resp_json = await response.json()
-            session = ck_v
 
-            if (resp_json["KEY"] != true) {
-                resp = await fetch("{{ URI }}" + "/new")
-                res_json = await resp.json()
-                session = res_json["KEY"]
+
+            async function update() {
+                term.write("\n\nSubmitting...");
+                var input = document.getElementById("cmdline")
+                send = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: "{\"KEY\":\"" + session + "\", \"command\":\""+ input.value +"\"}"
+                    }
+
+
+                response = await fetch("{{ URI }}" + "/submission", send)
+                resp_json = await response.json()
+
+                term.write(`\x1b[2J\x1b[H${resp_json["output"]}\n`);
+                console.log(resp_json)
+                
+
+                if(resp_json["file"] !== "") {
+                    var audio = document.getElementById("audio_player");
+                    audio.src = "{{ URI }}"+"/"+resp_json["file"];
+                    console.log("{{ URI }}"+"/"+resp_json["file"]);
+                    audio.load();
+                }
+                input.value = ""
+
             }
-        }
-        document.cookie = "SK="+session;
-        var sk = document.getElementById("sessionID");
-        sk.textContent = "SessionID: " + session;
 
-    };
-</script>
-</body>
 
+            window.onload = async function() {
+                ck_v = getCookie("SK")
+                if(ck_v== null || ck_v == "") {
+
+                    response = await fetch("{{ URI }}" + "/new")
+                    resp_json = await response.json()
+                    session = resp_json["KEY"]
+
+                } else {
+
+                    send = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: "{\"KEY\":\"" + ck_v + "\"}"
+                    }
+                    response = await fetch("{{ URI }}" + "/validate", send)
+                    resp_json = await response.json()
+                    session = ck_v
+
+                    if (resp_json["KEY"] != true) {
+                        resp = await fetch("{{ URI }}" + "/new")
+                        res_json = await resp.json()
+                        session = res_json["KEY"]
+                    }
+                }
+                document.cookie = "SK="+session;
+                var sk = document.getElementById("sessionID");
+                sk.textContent = "SessionID: " + session;
+
+            };
+        </script>
+    </body>
 </html>

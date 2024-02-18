@@ -11,9 +11,9 @@
 - Testing in a self-hosted codeserver instance.
 
 ### Minimum Specs
-- Runs on Google Colab
-- 1 vCPU (of weak Xeon)
+- 1 vCPU
 - 12 GB RAM
+- 10GB of disk space
 
 ### Reference Specs (What it was built and tested on)
 - 8 vCPU (Intel Xeon E5 2670).
@@ -22,7 +22,6 @@
 
 ### Overall Notes
 - Does not require any extensive hardware.
-- Needs about ~2GB of disk space.
 - Preferable Linux environment
 
 ## Use

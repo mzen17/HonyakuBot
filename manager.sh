@@ -6,7 +6,7 @@ echo "This script should be running in repository directory."
 if [ "$1" == "install" ]; then
     if [ ! -d ".venv" ]; then
         echo "Creating virtual environment"
-        python -m venv .venv
+        python3 -m venv .venv
     else
         echo "Virtual environment already exists"
         echo "Use 'rm .venv' to remove it"
@@ -25,7 +25,13 @@ elif [ "$1" == "run" ]; then
     fi
     echo "If the URL does not root to /, enter base URI into second paramater."
     echo "Format for that is /base_uri"
-    CODESPACE_URI="https://${CODESPACE_NAME}-8000.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
+
+    if [ -z CODESPACE_NAME ]; then
+        CODESPACE_URI="https://${CODESPACE_NAME}-8000.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
+    else
+        CODESPACE_URI=""
+    fi
+
     if [ CODESPACE_URI != "https://-8000." ]; then
         echo "Auto detected codespace URI: ${CODESPACE_URI}"
     fi
@@ -37,7 +43,7 @@ elif [ "$1" == "run" ]; then
         export BASE_URI=$2
     fi
     echo "Using URI: ${BASE_URI}"
-    uvicorn app.web:app --host 0.0.0.0
+    uvicorn app.web:app --host 0.0.0.0 --reload
 else
     echo "Invalid argument"
     echo "Use 'install' or 'run'"
