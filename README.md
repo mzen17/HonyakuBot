@@ -11,14 +11,19 @@ May be down, have performance issues, etc. Do not expect any sort of uptime or p
 - Testing in a self-hosted codeserver instance.
 
 ### Minimum Specs
-- 1 vCPU
-- 12 GB RAM
+- 2 vCPU
+- 8 GB RAM
 - 10GB of disk space
 
 ### Reference Specs (What it was built and tested on)
 - 8 vCPU (Intel Xeon E5 2670).
 - 32GB RAM.
 - Debian 12 with python3, python3-venv, and pip installed.
+
+### Demo specs
+- 2vCPU (Intel Xeon E5 2670)
+- 8GB RAM.
+- Debian 12
 
 ### Overall Notes
 - Does not require any extensive hardware.
