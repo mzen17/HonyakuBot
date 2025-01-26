@@ -2,6 +2,8 @@
 - A game designed to train human beings like an AI.
 - Uses datasets with semantic analysis to judge accuracy.
 
+![Demo PNG](https://raw.githubusercontent.com/mzen17/HonyakuBot/refs/heads/main/gallery/answer.jpg)
+
 # Public Demo
 May be down, have performance issues, etc. Do not expect any sort of uptime or performance. It is running on demo machine without any form of performance testing or QA testing. Downtime will depend on how much free time I have.
 
